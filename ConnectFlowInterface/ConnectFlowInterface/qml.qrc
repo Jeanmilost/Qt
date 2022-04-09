@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>UI/js/CFI_JSHelper.js</file>
+        <file>UI/CFI_Box.qml</file>
+        <file>UI/CFI_Connector.qml</file>
+        <file>UI/CFI_Document.qml</file>
+        <file>UI/CFI_Handle.qml</file>
+        <file>UI/CFI_HandleControl.qml</file>
+        <file>UI/CFI_Link.qml</file>
+        <file>UI/CFI_Main.qml</file>
+        <file>UI/CFI_Page.qml</file>
+        <file>UI/CFI_Styles.qml</file>
+        <file>UI/qmldir</file>
+    </qresource>
+</RCC>
