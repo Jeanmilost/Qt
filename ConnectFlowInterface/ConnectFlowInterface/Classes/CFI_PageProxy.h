@@ -234,7 +234,8 @@ class CFI_PageProxy : public CFI_Proxy
         virtual Q_INVOKABLE void onDeleteLink(const QString& uid);
 
     private:
-        CFI_Page* m_pPage     = nullptr;
-        bool      m_BoxAdded  = false;
-        bool      m_LinkAdded = false;
+        CFI_Page*   m_pPage        = nullptr;
+        std::size_t m_LinkGenCount = 0;
+        bool        m_BoxAdded     = false;
+        bool        m_LinkAdded    = false;
 };

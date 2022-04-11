@@ -142,5 +142,6 @@ class CFI_DocumentModel : public QAbstractListModel
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-        CFI_Document* m_pDocument = nullptr;
+        CFI_Document* m_pDocument   = nullptr;
+        std::size_t   m_BoxGenCount = 0;
 };

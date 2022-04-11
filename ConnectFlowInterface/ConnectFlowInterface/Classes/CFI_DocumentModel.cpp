@@ -28,6 +28,9 @@
 
 #include "CFI_DocumentModel.h"
 
+// std
+#include <sstream>
+
 //---------------------------------------------------------------------------
 // CFI_DocumentModel
 //---------------------------------------------------------------------------
@@ -91,7 +94,16 @@ void CFI_DocumentModel::addBox()
     if (!pPage)
         return;
 
-    pPage->AddBox(L"aBox");
+    std::wostringstream sstr;
+
+    sstr << "Box";
+
+    if (m_BoxGenCount)
+        sstr << L" (" << std::to_wstring(m_BoxGenCount) << L")";
+
+    pPage->AddBox(sstr.str());
+
+    ++m_BoxGenCount;
 }
 //---------------------------------------------------------------------------
 int CFI_DocumentModel::rowCount(const QModelIndex& pParent) const

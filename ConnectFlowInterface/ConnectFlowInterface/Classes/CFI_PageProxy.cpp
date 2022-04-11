@@ -28,6 +28,9 @@
 
 #include "CFI_PageProxy.h"
 
+// std
+#include <sstream>
+
 //---------------------------------------------------------------------------
 // CFI_PageProxy
 //---------------------------------------------------------------------------
@@ -121,12 +124,15 @@ QString CFI_PageProxy::onAddLinkStart(const QString& fromUID, int position)
     if (!pQmlPage)
         return "";
 
-    //: New link title
-    //% "New link"
-    const QString defLinkTitle = qtTrId("id-new-link-title");
+    std::wostringstream sstr;
+
+    sstr << "Link";
+
+    if (m_LinkGenCount)
+        sstr << L" (" << std::to_wstring(m_LinkGenCount) << L")";
 
     // create and add a new link in the page
-    CFI_Link* pLink = pQmlPage->AddLink(defLinkTitle.toStdWString(),
+    CFI_Link* pLink = pQmlPage->AddLink(sstr.str(),
                                         L"",
                                         L"",
                                         fromUID.toStdString(),
@@ -135,6 +141,8 @@ QString CFI_PageProxy::onAddLinkStart(const QString& fromUID, int position)
     // succeeded?
     if (!pLink)
         return "";
+
+    ++m_LinkGenCount;
 
     // get newly added link unique identifier
     return QString::fromStdString(pLink->GetUID());

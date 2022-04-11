@@ -13,6 +13,8 @@ QtObject
     readonly property string m_DarkTextColor:      "#202020"
     readonly property string m_LightTextColor:     "white"
     readonly property string m_HighlightColor:     "#4e8cde"
+    readonly property string m_CheckBoxDefault:    "#e0e0e0"
+    readonly property string m_CheckBoxPressed:    "#808080"
 
     // font properties
     readonly property string m_FontFamily: "Arial"
@@ -20,4 +22,7 @@ QtObject
     // skinning properties
     readonly property int m_ConnectorWidth:  14
     readonly property int m_ConnectorHeight: 14
+
+    // interface properties
+    property bool m_UseCurvedLines: false
 }

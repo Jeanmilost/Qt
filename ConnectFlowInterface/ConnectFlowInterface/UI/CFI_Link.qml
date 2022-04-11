@@ -37,6 +37,7 @@ Item
     property string m_TextColor:   Styles.m_DarkTextColor
     property real   m_ScaleFactor: 1
     property int    m_TextMargin:  2
+    property bool   m_CurvedLines: Styles.m_UseCurvedLines
 
     // common properties
     id: itLink
@@ -62,13 +63,14 @@ Item
     Shape
     {
         // common properties
-        id:            shMsgFromLine
-        objectName:    "shMsgFromLine"
+        id:            shFromLine
+        objectName:    "shFromLine"
         anchors.fill:  parent
         layer.samples: 8
         layer.enabled: true
         smooth:        true
         clip:          false
+        visible:       !m_CurvedLines
 
         /**
         * First connection line path
@@ -76,8 +78,8 @@ Item
         ShapePath
         {
             // common properties
-            id:          spMsgFromLine
-            objectName:  "spMsgFromLine"
+            id:          spFromLine
+            objectName:  "spFromLine"
             strokeColor: m_Color
             fillColor:   "transparent"
             strokeWidth: 1
@@ -97,13 +99,14 @@ Item
     Shape
     {
         // common properties
-        id:            shMsgToLine
-        objectName:    "shMsgToLine"
+        id:            shToLine
+        objectName:    "shToLine"
         anchors.fill:  parent
         layer.samples: 8
         layer.enabled: true
         smooth:        true
         clip:          false
+        visible:       !m_CurvedLines
 
         /**
         * Second connection line path
@@ -111,8 +114,8 @@ Item
         ShapePath
         {
             // common properties
-            id:          spMsgToLine
-            objectName:  "spMsgToLine"
+            id:          spToLine
+            objectName:  "spToLine"
             strokeColor: m_Color
             fillColor:   "transparent"
             strokeWidth: 1
@@ -135,8 +138,8 @@ Item
             property var m_DirCW:  Qt.vector2d( m_Dir.y, -m_Dir.x)
 
             // common properties
-            id:          spMsgArrow
-            objectName:  "spMsgArrow"
+            id:          spArrow
+            objectName:  "spArrow"
             strokeColor: m_Color
             fillColor:   m_Color
             strokeWidth: 1
@@ -147,10 +150,90 @@ Item
             * Arrow path
             */
             PathMove { x: m_EndPoint.x; y: m_EndPoint.y }
-            PathLine { x: m_EndPoint.x - (m_ArrowSize.y * spMsgArrow.m_Dir.x) + (m_ArrowSize.x * spMsgArrow.m_DirCCW.x)
-                       y: m_EndPoint.y - (m_ArrowSize.y * spMsgArrow.m_Dir.y) + (m_ArrowSize.x * spMsgArrow.m_DirCCW.y) }
-            PathLine { x: m_EndPoint.x - (m_ArrowSize.y * spMsgArrow.m_Dir.x) + (m_ArrowSize.x * spMsgArrow.m_DirCW.x)
-                       y: m_EndPoint.y - (m_ArrowSize.y * spMsgArrow.m_Dir.y) + (m_ArrowSize.x * spMsgArrow.m_DirCW.y)  }
+            PathLine { x: m_EndPoint.x - (m_ArrowSize.y * spArrow.m_Dir.x) + (m_ArrowSize.x * spArrow.m_DirCCW.x)
+                       y: m_EndPoint.y - (m_ArrowSize.y * spArrow.m_Dir.y) + (m_ArrowSize.x * spArrow.m_DirCCW.y) }
+            PathLine { x: m_EndPoint.x - (m_ArrowSize.y * spArrow.m_Dir.x) + (m_ArrowSize.x * spArrow.m_DirCW.x)
+                       y: m_EndPoint.y - (m_ArrowSize.y * spArrow.m_Dir.y) + (m_ArrowSize.x * spArrow.m_DirCW.y)  }
+        }
+    }
+
+    Shape
+    {
+        // advanced properties
+        property bool m_InvertX:    m_StartPoint.x > m_EndPoint.x
+        property bool m_InvertY:    m_StartPoint.y > m_EndPoint.y
+        property bool m_FromIsHorz: m_From    ? (m_From.m_Position === CFI_Connector.IEPosition.IE_P_Left || m_From.m_Position === CFI_Connector.IEPosition.IE_P_Right) : false
+        property bool m_ToIsHorz:   m_To      ? (m_To.m_Position   === CFI_Connector.IEPosition.IE_P_Left || m_To.m_Position   === CFI_Connector.IEPosition.IE_P_Right) : false
+        property int  m_RectLeft:   m_InvertX ? m_EndPoint.x   : m_StartPoint.x
+        property int  m_RectTop:    m_InvertY ? m_EndPoint.y   : m_StartPoint.y
+        property int  m_RectRight:  m_InvertX ? m_StartPoint.x : m_EndPoint.x
+        property int  m_RectBottom: m_InvertY ? m_StartPoint.y : m_EndPoint.y
+
+        // common properties
+        id:            shCurvedLine
+        objectName:    "shCurvedLine"
+        anchors.fill:  parent
+        layer.samples: 8
+        layer.enabled: true
+        smooth:        true
+        visible:       m_CurvedLines
+
+        /**
+        * Message path
+        */
+        ShapePath
+        {
+            // common properties
+            id:          spCurvedLine
+            objectName:  "spCurvedLine"
+            strokeColor: "#202020"
+            fillColor:   "transparent"
+            strokeWidth: 1
+            startX:      shCurvedLine.m_InvertX ? shCurvedLine.m_RectRight  : shCurvedLine.m_RectLeft
+            startY:      shCurvedLine.m_InvertY ? shCurvedLine.m_RectBottom : shCurvedLine.m_RectTop
+
+            /**
+            * Message curve
+            */
+            PathCubic
+            {
+                // common properties
+                x:         shCurvedLine.m_InvertX ?  shCurvedLine.m_RectLeft                                                            :  shCurvedLine.m_RectRight
+                y:         shCurvedLine.m_InvertY ?  shCurvedLine.m_RectTop                                                             :  shCurvedLine.m_RectBottom
+                control1X: shCurvedLine.m_InvertX ? (shCurvedLine.m_FromIsHorz ? shCurvedLine.m_RectLeft   : shCurvedLine.m_RectRight)  : (shCurvedLine.m_FromIsHorz ? shCurvedLine.m_RectRight  : shCurvedLine.m_RectLeft)
+                control1Y: shCurvedLine.m_InvertY ? (shCurvedLine.m_FromIsHorz ? shCurvedLine.m_RectBottom : shCurvedLine.m_RectTop)    : (shCurvedLine.m_FromIsHorz ? shCurvedLine.m_RectTop    : shCurvedLine.m_RectBottom)
+                control2X: shCurvedLine.m_InvertX ? (shCurvedLine.m_ToIsHorz   ? shCurvedLine.m_RectRight  : shCurvedLine.m_RectLeft)   : (shCurvedLine.m_ToIsHorz   ? shCurvedLine.m_RectLeft   : shCurvedLine.m_RectRight)
+                control2Y: shCurvedLine.m_InvertY ? (shCurvedLine.m_ToIsHorz   ? shCurvedLine.m_RectTop    : shCurvedLine.m_RectBottom) : (shCurvedLine.m_ToIsHorz   ? shCurvedLine.m_RectBottom : shCurvedLine.m_RectTop)
+            }
+        }
+
+        /**
+        * Arrow
+        */
+        ShapePath
+        {
+            property var m_Dir:    Qt.vector2d(shCurvedLine.m_ToIsHorz ?       (shCurvedLine.m_InvertX ? -1.0 : 1.0) : 0.0,
+                                               shCurvedLine.m_ToIsHorz ? 0.0 : (shCurvedLine.m_InvertY ? -1.0 : 1.0))
+            property var m_DirCCW: Qt.vector2d(-m_Dir.y,  m_Dir.x)
+            property var m_DirCW:  Qt.vector2d( m_Dir.y, -m_Dir.x)
+
+            // common properties
+            id:          spCurvedLineArrow
+            objectName:  "spCurvedLineArrow"
+            strokeColor: m_Color
+            fillColor:   m_Color
+            strokeWidth: 1
+            startX:      m_CenterPoint.x
+            startY:      m_CenterPoint.y
+
+            /**
+            * Arrow path
+            */
+            PathMove { x: m_EndPoint.x; y: m_EndPoint.y }
+            PathLine { x: m_EndPoint.x - (m_ArrowSize.y * spCurvedLineArrow.m_Dir.x) + (m_ArrowSize.x * spCurvedLineArrow.m_DirCCW.x)
+                       y: m_EndPoint.y - (m_ArrowSize.y * spCurvedLineArrow.m_Dir.y) + (m_ArrowSize.x * spCurvedLineArrow.m_DirCCW.y) }
+            PathLine { x: m_EndPoint.x - (m_ArrowSize.y * spCurvedLineArrow.m_Dir.x) + (m_ArrowSize.x * spCurvedLineArrow.m_DirCW.x)
+                       y: m_EndPoint.y - (m_ArrowSize.y * spCurvedLineArrow.m_Dir.y) + (m_ArrowSize.x * spCurvedLineArrow.m_DirCW.y)  }
         }
     }
 
