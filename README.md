@@ -1,5 +1,5 @@
 # Qt
-This repository contains several Qt and Qml demos and prototypes I created for several of my personal projects.
+This repository contains several demos and prototypes based on the Qt and Qml API.
 
 ## Connect flow interface
 This project shows a connect flow interface, on which you can put box components, which may be connected with links, in a similar way as e.g what is done in the Unreal blueprint system.
