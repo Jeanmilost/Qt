@@ -69,9 +69,9 @@ T.Control
         // common properties
         id: mdConfirmDelLinks
         objectName: "mdConfirmDelLinks"
-        title: qsTrId("delete-attached-links-title")
-        text: qsTrId("delete-attached-links-text")
-        detailedText: qsTrId("delete-attached-links-detailed-text")
+        title: qsTr("Do delete attached links?")
+        text: qsTr("Several links are attached to the box.\r\n\r\nDeleting the box will also delete these links.\r\n\r\nContinue?")
+        detailedText: qsTr("By deleting a box, all the links attached to it will also be deleted.\r\n\r\nIf you answer No, the box will not be deleted.")
         icon: StandardIcon.Question
         standardButtons: StandardButton.Yes | StandardButton.No
         visible: false
@@ -263,7 +263,7 @@ T.Control
             objectName: "maPage"
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: rcPageContent.m_DraggingMsg ? Qt.CrossCursor : (m_Panning ? Qt.ClosedHandCursor : Qt.OpenHandCursor);
+            cursorShape: rcPageContent.m_DraggingLink ? Qt.CrossCursor : (m_Panning ? Qt.ClosedHandCursor : Qt.OpenHandCursor);
 
             /// Called when mouse is pressed above page
             onPressed: function(mouseEvent)
@@ -357,7 +357,7 @@ T.Control
             Rectangle
             {
                 // advanced properties
-                property bool m_DraggingMsg: false
+                property bool m_DraggingLink: false
 
                 // signals
                 signal doDisableMoveSize(var box)
@@ -1028,11 +1028,11 @@ T.Control
 
         // unbind link from start box
         if (link.m_From)
-            link.unbindMsgFromBox(link.m_From.m_Box);
+            link.unbindLinkFromBox(link.m_From.m_Box);
 
         // unbind link from end box
         if (link.m_To)
-            link.unbindMsgFromBox(link.m_To.m_Box);
+            link.unbindLinkFromBox(link.m_To.m_Box);
 
         ppPageProxy.onDeleteLink(link.linkProxy.uid);
     }

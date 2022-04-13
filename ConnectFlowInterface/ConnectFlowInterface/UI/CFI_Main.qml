@@ -70,10 +70,14 @@ ApplicationWindow
             /// Checkbox check mark
             indicator: Rectangle
             {
+                // advanced properties
+                property int m_CheckBoxSize: parent.height
+
+                // common properties
                 id: ckUseCurvedLinesCheck
                 objectName: "ckUseCurvedLinesCheck"
-                implicitWidth: parent.height
-                implicitHeight: parent.height
+                width: m_CheckBoxSize
+                height: m_CheckBoxSize
                 x: ckUseCurvedLines.leftPadding
                 y: parent.height / 2 - height / 2
                 radius: 3
@@ -81,6 +85,7 @@ ApplicationWindow
 
                 Rectangle
                 {
+                    // common properties
                     width: parent.width - 4
                     height: parent.height - 4
                     x: 2
@@ -94,6 +99,7 @@ ApplicationWindow
             /// Checkbox Text
             contentItem: Text
             {
+                // common properties
                 id: ckUseCurvedLinesText
                 objectName: "ckUseCurvedLinesText"
                 anchors.fill: parent

@@ -32,11 +32,15 @@ Item
                                                m_StartPoint.y + (((m_EndPoint.y - m_StartPoint.y) / 2.0) - (m_LabelSize.y / 2.0)))
     property var    m_LabelSize:   Qt.vector2d(100, 50)
     property var    m_ArrowSize:   Qt.vector2d(3,   10)
-    property string m_Color:       "#202020"
-    property string m_BgColor:     "white"
+    property string m_Color:       Styles.m_LinkBorderColor
+    property string m_BgColor:     Styles.m_LinkBgColor
     property string m_TextColor:   Styles.m_DarkTextColor
+    property string m_FontFamily:  Styles.m_ComponentFont.m_Family
     property real   m_ScaleFactor: 1
-    property int    m_TextMargin:  2
+    property int    m_FontSize:    Styles.m_ComponentFont.m_Size
+    property int    m_TextMargin:  Styles.m_LinkTextMargin
+    property int    m_BorderWidth: Styles.m_LinkBorderWidth
+    property int    m_Radius:      Styles.m_LinkRadius
     property bool   m_CurvedLines: Styles.m_UseCurvedLines
 
     // common properties
@@ -293,8 +297,8 @@ Item
             anchors.fill: parent
             color:        m_BgColor
             border.color: m_Color
-            border.width: 1
-            radius:       3
+            border.width: m_BorderWidth
+            radius:       m_Radius
             z:            rcBackground.activeFocus ? -1 : 0
             clip:         true
 
@@ -313,8 +317,8 @@ Item
                 anchors.topMargin:   m_TextMargin
                 anchors.right:       parent.right
                 anchors.rightMargin: m_TextMargin
-                font.family:         Styles.m_FontFamily
-                font.pointSize:      9
+                font.family:         m_FontFamily
+                font.pointSize:      m_FontSize
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.WordWrap
@@ -336,8 +340,8 @@ Item
                 anchors.top:         txTitle.bottom
                 anchors.right:       parent.right
                 anchors.rightMargin: m_TextMargin
-                font.family:         Styles.m_FontFamily
-                font.pointSize:      9
+                font.family:         m_FontFamily
+                font.pointSize:      m_FontSize
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment:   Text.AlignVCenter
                 wrapMode:            Text.WordWrap
@@ -359,8 +363,8 @@ Item
                 anchors.top:          txDescription.bottom
                 anchors.right:        parent.right
                 anchors.rightMargin:  m_TextMargin
-                font.family:          Styles.m_FontFamily
-                font.pointSize:       9
+                font.family:          m_FontFamily
+                font.pointSize:       m_FontSize
                 horizontalAlignment:  Text.AlignHCenter
                 verticalAlignment:    Text.AlignVCenter
                 wrapMode:             Text.WordWrap
@@ -560,7 +564,7 @@ Item
     onM_FromChanged:
     {
         //console.log("onM_FromChanged");
-        bindMsgToSrcBox();
+        bindLinkToSrcBox();
     }
 
     /**
@@ -569,12 +573,12 @@ Item
     onM_ToChanged:
     {
         //console.log("onM_ToChanged");
-        bindMsgToDstBox();
+        bindLinkToDstBox();
     }
 
     /**
     * Called when a connector should be binded to this link
-    *@param {CFI_Connector} connector - connector to which this message should be binded
+    *@param {CFI_Connector} connector - connector to which this link should be binded
     */
     onBindTo: function(connector)
     {
@@ -590,28 +594,28 @@ Item
     /**
     * Bind link to source box
     */
-    function bindMsgToSrcBox()
+    function bindLinkToSrcBox()
     {
         // from connector should be defined
         if (!m_From)
             return;
 
         // unbind link from parent box, if previously binded
-        unbindMsgFromBox(m_From.m_Box);
+        unbindLinkFromBox(m_From.m_Box);
         m_From.m_Links.push(this);
     }
 
     /**
     * Bind link to destination box
     */
-    function bindMsgToDstBox()
+    function bindLinkToDstBox()
     {
         // to connector should be defined
         if (!m_To)
             return;
 
         // unbind link from parent box, if previously binded
-        unbindMsgFromBox(m_To.m_Box);
+        unbindLinkFromBox(m_To.m_Box);
         m_To.m_Links.push(this);
     }
 
@@ -619,7 +623,7 @@ Item
     * Unbinds a link from a box
     *@param {CFI_Box} box - box for which the link should be unbind
     */
-    function unbindMsgFromBox(box)
+    function unbindLinkFromBox(box)
     {
         if (!box)
             return 0;
