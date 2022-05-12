@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 6.3499999 6.3500002"
+   height="24"
+   width="24">
+  <defs
+     id="defs2">
+    <linearGradient
+       osb:paint="solid"
+       id="linearGradient854">
+      <stop
+         id="stop852"
+         offset="0"
+         style="stop-color:#808080;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="matrix(0.87922737,0,0,0.87922737,0.38345318,0.38345318)"
+       gradientUnits="userSpaceOnUse"
+       y2="3.175"
+       x2="6.35"
+       y1="3.175"
+       x1="2.9802322e-08"
+       id="linearGradient856"
+       xlink:href="#linearGradient854" />
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <rect
+       ry="1.0233222"
+       y="0.50000006"
+       x="0.50000006"
+       height="5.3499999"
+       width="5.3499999"
+       id="rect833"
+       style="fill:#afafaf;stroke:url(#linearGradient856);stroke-width:0.999998;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill" />
+    <rect
+       ry="0.45086163"
+       y="0.79375011"
+       x="2.6458335"
+       height="4.7624998"
+       width="1.0583333"
+       id="rect835"
+       style="fill:#141618;fill-opacity:1;stroke:none;stroke-width:0.265112;paint-order:stroke markers fill" />
+    <rect
+       transform="rotate(90)"
+       style="fill:#141618;fill-opacity:1;stroke:none;stroke-width:0.265112;paint-order:stroke markers fill"
+       id="rect835-3"
+       width="1.0583333"
+       height="4.7624993"
+       x="2.6458335"
+       y="-5.5562496"
+       ry="0.45086163" />
+  </g>
+</svg>

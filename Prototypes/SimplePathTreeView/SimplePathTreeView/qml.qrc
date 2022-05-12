@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/UI/main.qml</file>
+        <file>Resources/UI/TreeView.qml</file>
+        <file>Resources/Images/minus.svg</file>
+        <file>Resources/Images/plus.svg</file>
+        <file>Resources/UI/TreeItem.qml</file>
+    </qresource>
+</RCC>
