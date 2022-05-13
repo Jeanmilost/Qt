@@ -123,6 +123,19 @@ T.Frame
         }
         */
 
+        Component
+        {
+            id: cpItemContent
+
+            Rectangle
+            {
+                id: rcItemContent
+                anchors.fill: parent
+                border.width: 1
+                color: "red"
+            }
+        }
+
         /**
         * Tree view
         */
@@ -209,63 +222,60 @@ T.Frame
             }
             */
 
+            /*REM
             Component
             {
-                id: cpItemContent
-
-                Rectangle
-                {
-                    id: rcItemContent
-                    anchors.fill: parent
-                    border.width: 1
-                    color: "red"
-                }
-            }
-
-            Component
-            {
+                // common properties
                 id: cpItem
 
+                / **
+                * Item column layout
+                * /
                 Column
                 {
-                    property alias childrenCount: rpChildren.model
+                    // declared properties
+                    property var m_SourceComponent: cpItemContent
+                    property var m_Content:         ldItem.item
+                    property int m_ChildrenCount:   0
 
-                    property var m_Content: ldItem.item
-
+                    // common properties
                     id: clItem
 
+                    / **
+                    * Item row layout
+                    * /
                     Row
                     {
+                        // common properties
                         id: rwItem
 
-                        /*REM
-                        Rectangle
-                        {
-                            id: rcItem
-                            width: 200
-                            height: 40
-                            border.width: 1
-                            color: "yellow"
-                        }
-                        */
+                        / **
+                        * Item content loader
+                        * /
                         Loader
                         {
                             // common properties
                             id: ldItem
                             objectName: "ldItem"
-                            sourceComponent: cpItemContent
-
+                            sourceComponent: m_SourceComponent
                             width: fcTreeView.width
                             height: 40
                         }
                     }
 
+                    / **
+                    * Item children repeater
+                    * /
                     Repeater
                     {
+                        // common properties
                         id: rpChildren
-                        model: 0
+                        model: m_ChildrenCount
                         delegate: cpItem
                     }
+
+                    //REM Binding { target: cpItem; property: "model"; value: m_ChildrenCount; when: loader.status == Loader.Ready }
+
 
                     function getNb2()
                     {
@@ -274,7 +284,7 @@ T.Frame
 
                     function changeNb2(count)
                     {
-                        return rpChildren.itemAt(2).childrenCount = count;
+                        return rpChildren.itemAt(2).m_ChildrenCount = count;
                     }
 
                     function changeTo5()
@@ -283,13 +293,14 @@ T.Frame
                     }
                 }
             }
+            */
 
             Loader
             {
                 // common properties
                 id: ldRoot
                 objectName: "ldRoot"
-                sourceComponent: cpItem
+                //REM sourceComponent: cpItem
             }
 
             /*REM
@@ -302,26 +313,26 @@ T.Frame
 
             Component.onCompleted:
             {
-                /*REM
                 const itemRootId = "tiRootItem";
 
                 // create a new document view
-                ldRootItem.setSource("TreeItem.qml", {"id":         itemRootId,
-                                                      "objectName": itemRootId,
-                                                      "height":     25,
-                                                      "m_Delegate": cpItem});
+                ldRoot.setSource("TreeItem.qml", {"id":                itemRootId,
+                                                  "objectName":        itemRootId,
+                                                  "m_SourceComponent": cpItemContent});
 
                 // succeeded?
-                if (!ldRootItem.item)
+                if (!ldRoot.item)
                 {
                     console.error("Create root item - FAILED - an error occurred while the item was created");
                     return;
                 }
 
-                ldRootItem.item.m_ChildrenCount = 5;
-                */
+                console.log(ldRoot.item);
+                //REM ldRootItem.item.m_ChildrenCount = 5;
 
-                ldRoot.item.childrenCount = 2;
+                ldRoot.item.m_Item.m_ChildrenCount = 2;
+
+                //REM ldRoot.item.model = 2;
                 ldRoot.item.changeTo5();
                 ldRoot.item.getNb2().color = "blue";
                 //REM ldRoot.item.getNb2().childrenCount = 4;
