@@ -65,6 +65,9 @@
     <QtMoc Include="TreeModel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="TreeItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\UI\main.qml">
@@ -82,10 +85,5 @@
     <None Include="Resources\UI\TreeItem.qml">
       <Filter>Resource Files\UI</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="TreeItem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

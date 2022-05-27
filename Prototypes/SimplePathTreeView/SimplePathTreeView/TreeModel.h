@@ -45,18 +45,11 @@ class TreeModel : public QAbstractListModel
 
     signals:
         /**
-        * Called when the tree content changed
-        *@param index - item index which is influenced by the change (i.e. item index on added, parent index on removed)
+        * Called when an item should be added to the view
+        *@param parentId - parent item identifier in which item should be added
+        *@param id - newly added item identifier
         */
-        void treeContentChanged(int index);
-
-        /**
-        * Called when the collapse state changed on an item
-        *@param index - item index which collapse state changed
-        *@param isParent - if true, the item is the parent which is owning the changing children items
-        *@param value - if true, item is collapsed, extended otherwise
-        */
-        void collapseStateChanged(int index, bool isParent, bool value);
+        void addItemToView(const QString& parentId, const QString& id);
 
     public:
         /**
@@ -77,6 +70,10 @@ class TreeModel : public QAbstractListModel
         explicit TreeModel(QObject* pParent = nullptr);
 
         virtual ~TreeModel();
+
+        TreeItem* AddItem(TreeItem* pParent, const std::wstring& name);
+
+        void DeleteItem(TreeItem* pItem);
 
         /**
         * Called when the add item button was clicked on the tree view
@@ -101,19 +98,21 @@ class TreeModel : public QAbstractListModel
         */
         virtual Q_INVOKABLE void clear();
 
+        virtual Q_INVOKABLE QString getText(const QString& id) const;
+
         /**
         * Adds an item
         *@param parentIndex - item index which will own the new item
         *@return true on success, otherwise false
         */
-        virtual Q_INVOKABLE bool addItem(int parentIndex);
+        //REM virtual Q_INVOKABLE bool addItem(int parentIndex);
 
         /**
         * Deletes an item
         *@param index - item index to delete
         *@return true on success, otherwise false
         */
-        virtual Q_INVOKABLE bool deleteItem(int index);
+        //REM virtual Q_INVOKABLE bool deleteItem(int index);
 
         /**
         * Checks if an item is a leaf
@@ -158,6 +157,11 @@ class TreeModel : public QAbstractListModel
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
+        typedef std::vector<TreeItem*> IItems;
+
+        IItems m_Items;
+
+        /*REM
         class ItemList
         {
             public:
@@ -172,9 +176,9 @@ class TreeModel : public QAbstractListModel
                 void Delete(int index);
                 void Delete(TreeItem* pItem);
 
-                /**
+                / **
                 * Deletes all items
-                */
+                * /
                 void DeleteAll();
 
                 TreeItem* GetItem(int index);
@@ -186,25 +190,25 @@ class TreeModel : public QAbstractListModel
                 std::size_t GetRootCount() const;
                 std::size_t GetCount(int parentIndex) const;
 
-                /**
+                / **
                 * Checks if an item is a leaf
                 *@param index - item index
                 *@return true if the item is a leaf, otherwise false
-                */
+                * /
                 bool IsLeaf(int index) const;
 
-                /**
+                / **
                 * Sets the item as collapsed
                 *@param index - item index
                 *@param value - if true, item is collapsed
-                */
+                * /
                 void SetCollapsed(int index, bool value);
 
-                /**
+                / **
                 * Checks if item is collapsed
                 *@param index - item index
                 *@return true if item is collapsed, otherwise false
-                */
+                * /
                 bool IsCollapsed(int index) const;
 
                 #ifdef _DEBUG
@@ -224,10 +228,11 @@ class TreeModel : public QAbstractListModel
                     void LogToOutput(const TreeItem* pCurrent) const;
                 #endif
         };
+        */
 
         //REM TreeItem    m_Root;
-        ItemList    m_ItemList;
-        std::size_t m_ItemGenCount = 0;
+        //REM ItemList    m_ItemList;
+        //REM std::size_t m_ItemGenCount = 0;
 
         //REM TreeItem* IndexToItem(int index, std::size_t& count, TreeItem* pItem = nullptr);
 
@@ -240,4 +245,19 @@ class TreeModel : public QAbstractListModel
         TreeItem* GetNext(TreeItem* pItem);
         */
         //REM TreeItem* GetAt(int index, std::size_t& count);
+
+        std::wstring GetText(const TreeItem* pItem, const std::string& id) const;
+
+        /**
+        * Gets the item count (including all children)
+        *@return the item count
+        */
+        std::size_t GetItemCount() const;
+
+        /**
+        * Gets the item children count
+        *@param pItem - item from which children should be counted
+        *@return the item children count
+        */
+        std::size_t GetChildrenCount(const TreeItem* pItem) const;
 };

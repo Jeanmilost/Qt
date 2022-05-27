@@ -32,12 +32,17 @@
 #include <vector>
 #include <string>
 
+// qt
+#include <QObject>
+
 /**
 * Tree item
 *@author Jean-Milost Reymond
 */
-class TreeItem
+class TreeItem : public QObject
 {
+    Q_OBJECT
+
     public:
         TreeItem();
 
@@ -48,6 +53,12 @@ class TreeItem
         TreeItem(const std::wstring& name);
 
         virtual ~TreeItem();
+
+        /**
+        * Gets the item unique identifier
+        *@return the item unique identifier
+        */
+        virtual std::string GetID() const;
 
         /**
         * Gets the item name
@@ -92,7 +103,7 @@ class TreeItem
         * Deletes a child item from this item at index
         *@param index - child item index to delete
         */
-        virtual void DeleteAt(std::size_t index);
+        //REM virtual void DeleteAt(std::size_t index);
 
         /**
         * Deletes all children

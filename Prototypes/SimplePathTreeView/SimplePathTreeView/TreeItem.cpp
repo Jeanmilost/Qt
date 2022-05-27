@@ -34,16 +34,24 @@
 //---------------------------------------------------------------------------
 // TreeItem
 //---------------------------------------------------------------------------
-TreeItem::TreeItem()
+TreeItem::TreeItem() :
+    QObject()
 {}
 //---------------------------------------------------------------------------
-TreeItem::TreeItem(const std::wstring& name)
+TreeItem::TreeItem(const std::wstring& name) :
+    QObject(),
+    m_Name(name)
 {}
 //---------------------------------------------------------------------------
 TreeItem::~TreeItem()
 {
     for each (auto pChild in m_Children)
         delete pChild;
+}
+//---------------------------------------------------------------------------
+std::string TreeItem::GetID() const
+{
+    return std::to_string(std::uintptr_t(this));
 }
 //---------------------------------------------------------------------------
 std::wstring TreeItem::GetName() const
@@ -100,6 +108,7 @@ bool TreeItem::Delete(TreeItem* pItem, bool recursive)
     return false;
 }
 //---------------------------------------------------------------------------
+/*REM
 void TreeItem::DeleteAt(std::size_t index)
 {
     if (index >= m_Children.size())
@@ -108,6 +117,7 @@ void TreeItem::DeleteAt(std::size_t index)
     delete m_Children[index];
     m_Children.erase(m_Children.begin() + index);
 }
+*/
 //---------------------------------------------------------------------------
 void TreeItem::DeleteAll()
 {

@@ -9,8 +9,10 @@ import QtQuick.Templates 2.15 as T
 Item
 {
     // declared properties
-    property var m_Item:            ldMain.item
-    property var m_SourceComponent: undefined
+    property var    m_Model:           undefined
+    property var    m_Item:            ldMain.item
+    property var    m_SourceComponent: undefined
+    property string m_ID
 
     // common properties
     id: itItem
@@ -33,6 +35,7 @@ Item
 
             // declared properties
             property var m_Content:       ldItem.item
+            property int m_Level:         0
             property int m_ChildrenCount: 0
 
             // common properties
@@ -56,8 +59,23 @@ Item
                     objectName: "ldItem"
                     sourceComponent: itItem.m_SourceComponent
                     width: fcTreeView.width
-                    height: 40
+                    height: fcTreeView.m_ItemHeight
+
+                    /// Called when component is loaded
+                    Component.onCompleted:
+                    {
+                        if (m_Model)
+                        {
+                            ldItem.item.m_Text  = m_Model.getText(m_ID);
+                            ldItem.item.m_Level = m_Level;
+                        }
+                    }
                 }
+            }
+
+            onM_LevelChanged:
+            {
+                ldItem.item.m_Level = m_Level;
             }
 
             /**
@@ -96,6 +114,9 @@ Item
 
     function changeTo5()
     {
-        return m_Item.m_ChildrenCount = 5;
+        m_Item.m_ChildrenCount = 5;
+
+        for (let i = 0; i < m_Item.children.count; ++i)
+            m_Item.children.itemAt(i).m_Level = m_Item.m_Level + 1;
     }
 }

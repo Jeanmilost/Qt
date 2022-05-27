@@ -16,7 +16,7 @@ T.Frame
     property int    m_TransitionDuration:    0
     */
     // declared properties
-    property var m_Model: undefined
+    property var m_Model: tmTreeModel
 
     // common properties
     id: frTreeViewFrame
@@ -129,11 +129,47 @@ T.Frame
 
             Rectangle
             {
+                property string m_Text
+                property int    m_Level: 0
+
                 id: rcItemContent
                 anchors.fill: parent
                 border.width: 1
                 color: "red"
+
+                /**
+                * Item indent
+                */
+                Item
+                {
+                    // common properties
+                    id: itItemIndent
+                    objectName: "itItemIndent"
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    x: 0
+                    width: fcTreeView.m_BlankWidth * m_Level
+                }
+
+                Text
+                {
+                    anchors.left: itItemIndent.right
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    text: m_Text //REM m_Model.getText(m_ID) // FIXME make a property
+                }
             }
+        }
+
+        /**
+        * Tree view content model
+        */
+        ListModel
+        {
+            // common properties
+            id: lmTreeViewContent
+            objectName: "lmTreeViewContent"
         }
 
         /**
@@ -141,6 +177,9 @@ T.Frame
         */
         Flickable
         {
+            property int m_ItemHeight: 25
+            property int m_BlankWidth: 10
+
             // common properties
             id: fcTreeView
             objectName: "fcTreeView"
@@ -152,7 +191,7 @@ T.Frame
             clip: true
 
             contentWidth: width
-            contentHeight: 25 * 25
+            contentHeight: m_ItemHeight * 25
             //boundsBehavior: Flickable.StopAtBounds
             ScrollBar.vertical: ScrollBar {}
 
@@ -295,6 +334,7 @@ T.Frame
             }
             */
 
+            /*REM
             Loader
             {
                 // common properties
@@ -302,6 +342,53 @@ T.Frame
                 objectName: "ldRoot"
                 //REM sourceComponent: cpItem
             }
+            */
+
+            /**
+            * Main item repeater
+            */
+            Repeater
+            {
+                // common properties
+                id: rpMainItem
+                objectName: "rpMainItem"
+                anchors.fill: parent
+                model: lmTreeViewContent
+
+                /**
+                * Component loader
+                */
+                Loader
+                {
+                    // common properties
+                    objectName: loaderId
+
+                    /*REM
+                    /// Called when component is loaded
+                    Component.onCompleted:
+                    {}
+                    */
+                }
+            }
+
+            /*REM
+            Repeater
+            {
+                // common properties
+                id: rpMainItem
+                objectName: "rpMainItem"
+                model: lmTreeViewContent
+                delegate: ldMainItem
+
+                Loader
+                {
+                    // common properties
+                    id: ldMainItem
+                    objectName: "ldMainItem"
+                    //REM sourceComponent: cpItem
+                }
+            }
+            */
 
             /*REM
             Loader
@@ -311,6 +398,7 @@ T.Frame
             }
             */
 
+            /*REM
             Component.onCompleted:
             {
                 const itemRootId = "tiRootItem";
@@ -338,6 +426,7 @@ T.Frame
                 //REM ldRoot.item.getNb2().childrenCount = 4;
                 ldRoot.item.changeNb2(4);
             }
+            */
 
             /*REM
             Repeater
@@ -360,6 +449,68 @@ T.Frame
                 }
             }
             */
+        }
+
+        Connections
+        {
+            target: tmTreeModel
+            ignoreUnknownSignals: true
+
+            function onAddItemToView(parentId, id)
+            {
+                console.log("parent - " + parentId + " - id - " + id);
+
+                if (!parentId || !parentId.length)
+                {
+                    // build item loader identifier
+                    const loaderId = "ldItem_" + id;
+
+                    // create a loader to load the item
+                    lmTreeViewContent.append({"id": loaderId, "loaderId": loaderId});
+
+                    const itemIndex = rpMainItem.count - 1;
+
+                    // get the newly added loader
+                    let loader = rpMainItem.itemAt(itemIndex);
+
+                    // found it?
+                    if (!loader)
+                    {
+                        console.error("Add item - an error occurred while the loader was created");
+                        return;
+                    }
+
+                    // build item identifier
+                    const itemId = "itItem_" + id;
+
+                    // load the item
+                    loader.setSource("TreeItem.qml", {"id":                itemId,
+                                                      "objectName":        itemId,
+                                                      "x":                 0,
+                                                      "y":                 itemIndex * fcTreeView.m_ItemHeight * 6,
+                                                      "width":             fcTreeView.width,
+                                                      "height":            fcTreeView.m_ItemHeight * 6,
+                                                      "m_ID":              id,
+                                                      "m_Model":           m_Model,
+                                                      "m_SourceComponent": cpItemContent});
+
+                    // get the loaded item
+                    let item = loader.item;
+
+                    // found it?
+                    if (!item)
+                    {
+                        console.error("Add item - an error occurred while the item was created");
+                        return;
+                    }
+
+                    item.changeTo5();//REM FIXME
+
+                    console.log("Add item - succeeded - new item - " + item.objectName);
+
+                    return;
+                }
+            }
         }
 
         /*REM

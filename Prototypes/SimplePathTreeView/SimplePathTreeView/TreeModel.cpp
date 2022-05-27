@@ -40,19 +40,26 @@
 //---------------------------------------------------------------------------
 // TreeModel::ItemList
 //---------------------------------------------------------------------------
+/*REM
 TreeModel::ItemList::ItemList()
 {}
+*/
 //---------------------------------------------------------------------------
+/*REM
 TreeModel::ItemList::~ItemList()
 {
     m_Root.DeleteAll();
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 void TreeModel::ItemList::SetRootName(const std::wstring& name)
 {
     m_Root.SetName(name);
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 TreeItem* TreeModel::ItemList::Add(int index)
 {
     TreeItem* pParent = GetItem(index);
@@ -62,7 +69,9 @@ TreeItem* TreeModel::ItemList::Add(int index)
 
     return pParent->Add();
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 TreeItem* TreeModel::ItemList::Add(TreeItem* pItem)
 {
     if (!pItem)
@@ -70,12 +79,16 @@ TreeItem* TreeModel::ItemList::Add(TreeItem* pItem)
 
     return pItem->Add();
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 void TreeModel::ItemList::Delete(int index)
 {
     Delete(GetItem(index));
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 void TreeModel::ItemList::Delete(TreeItem* pItem)
 {
     if (!pItem)
@@ -88,26 +101,34 @@ void TreeModel::ItemList::Delete(TreeItem* pItem)
 
     pParent->Delete(pItem, false);
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 void TreeModel::ItemList::DeleteAll()
 {
     m_Root.DeleteAll();
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 TreeItem* TreeModel::ItemList::GetItem(int index)
 {
     std::size_t count = 0;
 
     return const_cast<TreeItem*>(GetItem(index, &m_Root, count));
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 int TreeModel::ItemList::GetIndex(TreeItem* pItem)
 {
     std::size_t count = 0;
 
     return GetIndex(pItem, &m_Root, count);
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 QVariant TreeModel::ItemList::GetData(const QModelIndex& index, int role) const
 {
           std::size_t count = 0;
@@ -134,7 +155,9 @@ QVariant TreeModel::ItemList::GetData(const QModelIndex& index, int role) const
 
     return QVariant();
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 std::size_t TreeModel::ItemList::GetRootCount() const
 {
     std::size_t count = 0;
@@ -143,7 +166,9 @@ std::size_t TreeModel::ItemList::GetRootCount() const
 
     return count;
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 std::size_t TreeModel::ItemList::GetCount(int parentIndex) const
 {
     if (parentIndex < 0)
@@ -161,7 +186,9 @@ std::size_t TreeModel::ItemList::GetCount(int parentIndex) const
 
     return count;
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 bool TreeModel::ItemList::IsLeaf(int index) const
 {
           std::size_t count = 0;
@@ -172,7 +199,9 @@ bool TreeModel::ItemList::IsLeaf(int index) const
 
     return pItem->IsLeaf();
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 void TreeModel::ItemList::SetCollapsed(int index, bool value)
 {
     std::size_t count = 0;
@@ -183,7 +212,9 @@ void TreeModel::ItemList::SetCollapsed(int index, bool value)
 
     pItem->SetCollapsed(value);
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 bool TreeModel::ItemList::IsCollapsed(int index) const
 {
           std::size_t count = 0;
@@ -194,14 +225,18 @@ bool TreeModel::ItemList::IsCollapsed(int index) const
 
     return pItem->IsCollapsed();
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 #ifdef _DEBUG
     void TreeModel::ItemList::LogToOutput() const
     {
         LogToOutput(&m_Root);
     }
 #endif
+*/
 //---------------------------------------------------------------------------
+/*REM
 const TreeItem* TreeModel::ItemList::GetItem(int index, const TreeItem* pCurrent, std::size_t& count) const
 {
     if (index == count)
@@ -221,7 +256,9 @@ const TreeItem* TreeModel::ItemList::GetItem(int index, const TreeItem* pCurrent
 
     return nullptr;
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 int TreeModel::ItemList::GetIndex(TreeItem* pItem, TreeItem* pCurrent, std::size_t& count) const
 {
     if (pItem == pCurrent)
@@ -241,7 +278,9 @@ int TreeModel::ItemList::GetIndex(TreeItem* pItem, TreeItem* pCurrent, std::size
 
     return -1;
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 void TreeModel::ItemList::GetCount(const TreeItem* pCurrent, std::size_t& count) const
 {
     ++count;
@@ -251,7 +290,9 @@ void TreeModel::ItemList::GetCount(const TreeItem* pCurrent, std::size_t& count)
     for (std::size_t i = 0; i < childCount; ++i)
         GetCount(pCurrent->GetChildAt(i), count);
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 #ifdef _DEBUG
     void TreeModel::ItemList::LogToOutput(const TreeItem* pCurrent) const
     {
@@ -272,26 +313,87 @@ void TreeModel::ItemList::GetCount(const TreeItem* pCurrent, std::size_t& count)
             LogToOutput(pCurrent->GetChildAt(i));
     }
 #endif
+*/
 //---------------------------------------------------------------------------
 // TreeModel
 //---------------------------------------------------------------------------
 TreeModel::TreeModel(QObject* pParent) :
-    QAbstractListModel(pParent)
+    QAbstractListModel(pParent)//REM,
+    //REM m_pRoot(new TreeItem())
 {
-    m_ItemList.SetRootName(L"Root");
+    //REM m_ItemList.SetRootName(L"Root");
 }
 //---------------------------------------------------------------------------
 TreeModel::~TreeModel()
-{}
+{
+    /*REM
+    if (m_pRoot)
+        delete m_pRoot;
+    */
+    for each (auto pItem in m_Items)
+        delete pItem;
+}
+//---------------------------------------------------------------------------
+TreeItem* TreeModel::AddItem(TreeItem* pParent, const std::wstring& name)
+{
+          TreeItem* pNewItem  = nullptr;
+    const int       itemCount = GetItemCount();
+
+    beginInsertRows(QModelIndex(), itemCount, itemCount);
+
+    try
+    {
+        if (!pParent)
+        {
+            std::unique_ptr<TreeItem> pItem = std::make_unique<TreeItem>(name);
+            m_Items.push_back(pItem.get());
+            pNewItem = pItem.release();
+
+            emit addItemToView(QString(), QString::fromStdString(pNewItem->GetID()));
+        }
+        else
+        {
+            pNewItem = pParent->Add(name);
+
+            emit addItemToView(QString::fromStdString(pParent->GetID()),
+                               QString::fromStdString(pNewItem->GetID()));
+        }
+    }
+    catch (...)
+    {}
+
+    endInsertRows();
+
+    return pNewItem;
+}
+//---------------------------------------------------------------------------
+void TreeModel::DeleteItem(TreeItem* pItem)
+{
+    //beginRemoveRows();
+    //endRemoveRows();
+
+    for (std::size_t i = 0; i < m_Items.size(); ++i)
+    {
+        if (m_Items[i] == pItem)
+        {
+            delete m_Items[i];
+            m_Items.erase(m_Items.begin() + i);
+            return;
+        }
+
+        if (m_Items[i]->Delete(pItem))
+            return;
+    }
+}
 //---------------------------------------------------------------------------
 void TreeModel::onAddItemClicked(int parentIndex)
 {
-    addItem(parentIndex);
+    //REM addItem(parentIndex);
 }
 //---------------------------------------------------------------------------
 void TreeModel::onDeleteItemClicked(int index)
 {
-    deleteItem(index);
+    //REM deleteItem(index);
 }
 //---------------------------------------------------------------------------
 void TreeModel::onItemDblClicked(int index)
@@ -299,12 +401,31 @@ void TreeModel::onItemDblClicked(int index)
 //---------------------------------------------------------------------------
 void TreeModel::clear()
 {
-    // clear the model
     beginResetModel();
-    m_ItemList.DeleteAll();
+
+    // clear the model
+    for each (auto pItem in m_Items)
+        delete pItem;
+
     endResetModel();
 }
 //---------------------------------------------------------------------------
+QString TreeModel::getText(const QString& id) const
+{
+    const std::string itemId = id.toStdString();
+
+    for each (auto pItem in m_Items)
+    {
+        const std::wstring text = GetText(pItem, itemId);
+
+        if (!text.empty())
+            return QString::fromStdWString(text);
+    }
+
+    return QString();
+}
+//---------------------------------------------------------------------------
+/*REM
 bool TreeModel::addItem(int parentIndex)
 {
     TreeItem* pParent = m_ItemList.GetItem(parentIndex);
@@ -344,7 +465,9 @@ bool TreeModel::addItem(int parentIndex)
 
     return true;
 }
+*/
 //---------------------------------------------------------------------------
+/*REM
 bool TreeModel::deleteItem(int index)
 {
     // root item or invalid item
@@ -381,14 +504,16 @@ bool TreeModel::deleteItem(int index)
 
     return true;
 }
+*/
 //---------------------------------------------------------------------------
 bool TreeModel::isLeaf(int index) const
 {
-    return m_ItemList.IsLeaf(index);
+    return false;// m_ItemList.IsLeaf(index);
 }
 //---------------------------------------------------------------------------
 void TreeModel::setCollapsed(int index, bool value)
 {
+    /*REM
     m_ItemList.SetCollapsed(index, value);
 
     const std::size_t childCount = m_ItemList.GetCount(index);
@@ -397,31 +522,77 @@ void TreeModel::setCollapsed(int index, bool value)
 
     for (std::size_t i = 1; i < childCount; ++i)
         emit collapseStateChanged(index + i, false, value);
+    */
 }
 //---------------------------------------------------------------------------
 bool TreeModel::isCollapsed(int index) const
 {
-    return m_ItemList.IsCollapsed(index);
+    return false;// m_ItemList.IsCollapsed(index);
 }
 //---------------------------------------------------------------------------
 int TreeModel::rowCount(const QModelIndex& parent) const
 {
-    return m_ItemList.GetRootCount();
+    return GetItemCount();
 }
 //---------------------------------------------------------------------------
 QVariant TreeModel::data(const QModelIndex& index, int role) const
 {
-    return m_ItemList.GetData(index, role);
+    return QVariant();//REM  m_ItemList.GetData(index, role);
 }
 //---------------------------------------------------------------------------
 QHash<int, QByteArray> TreeModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
+    /*REM
     roles[(int)TreeModel::IEDataRole::IE_DR_ItemName]        = "itemName";
     roles[(int)TreeModel::IEDataRole::IE_DR_ItemLevel]       = "itemLevel";
     roles[(int)TreeModel::IEDataRole::IE_DR_ItemIsCollapsed] = "itemIsCollapsed";
     roles[(int)TreeModel::IEDataRole::IE_DR_ItemIsLeaf]      = "itemIsLeaf";
+    */
 
     return roles;
+}
+//---------------------------------------------------------------------------
+std::wstring TreeModel::GetText(const TreeItem* pItem, const std::string& id) const
+{
+    if (!pItem)
+        return L"";
+
+    if (id == pItem->GetID())
+        return pItem->GetName();
+
+    const std::size_t childCount = pItem->GetChildCount();
+
+    for (std::size_t i = 0; i < childCount; ++i)
+    {
+        const std::wstring childName = GetText(pItem->GetChildAt(i), id);
+
+        if (!childName.empty())
+            return childName;
+    }
+
+    return L"";
+}
+//---------------------------------------------------------------------------
+std::size_t TreeModel::GetItemCount() const
+{
+    std::size_t count = m_Items.size();
+
+    for each (auto pItem in m_Items)
+    {
+    }
+
+    return count;
+}
+//---------------------------------------------------------------------------
+std::size_t TreeModel::GetChildrenCount(const TreeItem* pItem) const
+{
+    std::size_t count = 0;
+
+    for each (auto pItem in m_Items)
+    {
+    }
+
+    return count;
 }
 //---------------------------------------------------------------------------
