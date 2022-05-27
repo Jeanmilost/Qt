@@ -136,7 +136,7 @@ ApplicationWindow
                 Repeater
                 {
                     // common properties
-                    model: subNode
+                    model: childArray
                     delegate: cpItem
                 }
             }
@@ -233,7 +233,7 @@ ApplicationWindow
                             let szSplit = text.split(',');
 
                             if (szSplit.length === 1)
-                                lmTreeModel.append({"name": szSplit[0], "level": 0, "subNode": []});
+                                lmTreeModel.append({"name": szSplit[0], "level": 0, "childArray": []});
                             else
                             {
                                 if (lmTreeModel.get(parseInt(szSplit[0])) === undefined)
@@ -246,16 +246,16 @@ ApplicationWindow
 
                                 for (var i = 1; i < szSplit.length - 1; ++i)
                                 {
-                                    if (node.subNode.get(parseInt(szSplit[i])) === undefined)
+                                    if (node.childArray.get(parseInt(szSplit[i])) === undefined)
                                     {
                                         console.log("Error - Given node does not exist !");
                                         return;
                                     }
 
-                                    node = node.subNode.get(parseInt(szSplit[i]));
+                                    node = node.childArray.get(parseInt(szSplit[i]));
                                 }
 
-                                node.subNode.append({"name": szSplit[i], "level": i, "subNode": []});
+                                node.childArray.append({"name": szSplit[i], "level": i, "childArray": []});
                             }
                         }
                     }
