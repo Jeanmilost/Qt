@@ -131,6 +131,8 @@ T.Frame
         ListView
         {
             // common properties
+            id: lvTreeView
+            objectName: "lvTreeView"
             anchors.left: parent.left
             anchors.top: rcTreeHeader.bottom
             anchors.right: parent.right
@@ -138,6 +140,19 @@ T.Frame
             model: lmTreeContentModel
             delegate: cpItem
             clip: true
+
+            /**
+            * Vertical scrollbar
+            */
+            ScrollBar.vertical: ScrollBar
+            {
+                // common properties
+                id: sbTreeView
+                objectName: "sbTreeView"
+                parent: lvTreeView
+                visible: true
+                minimumSize: 0.1
+            }
         }
 
         /**
@@ -167,7 +182,7 @@ T.Frame
                 }
 
                 // search for parent node in which the new node should be added
-                var [parentNode, parentLevel] = findNode(parentItem.getId());
+                var [parentNode, parentLevel] = findNode(parentItem.uid);
 
                 // found it?
                 if (!parentNode)
@@ -204,7 +219,7 @@ T.Frame
             }
 
             // found the node?
-            if (node.treeItem.getId() === uid)
+            if (node.treeItem.uid === uid)
                 return [node, deep];
 
             // search in children
@@ -231,7 +246,7 @@ T.Frame
             return [null, -1];
 
         // found the node?
-        if (node.treeItem.getId() === uid)
+        if (node.treeItem.uid === uid)
             return [node, deep - 1];
 
         // iterate through children items
@@ -243,8 +258,8 @@ T.Frame
             // must exist
             if (!child)
             {
-                console.error("Find child - FAILED - found invalid child - index - " + i                     +
-                              " - parent - "                                         + node.treeItem.getId() +
+                console.error("Find child - FAILED - found invalid child - index - " + i                 +
+                              " - parent - "                                         + node.treeItem.uid +
                               " - uid to find - "                                    + uid);
                 continue;
             }

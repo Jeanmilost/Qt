@@ -44,6 +44,43 @@ class TreeItem : public QObject
     Q_OBJECT
 
     public:
+        Q_PROPERTY(QString name READ getName WRITE setName NOTIFY nameChanged)
+        Q_PROPERTY(QString uid  READ getUID)
+
+    public slots:
+        /**
+        * Gets the item name
+        *@return the item name
+        */
+        QString getName() const;
+
+        /**
+        * Sets the item name
+        *@param name - the item name
+        */
+        void setName(const QString& name);
+
+        /**
+        * Gets the unique identifier
+        *@return the unique identifier
+        */
+        QString getUID() const;
+
+    signals:
+        /**
+        * Called when an item should be added to the view
+        *@param pParentItem - parent item in which item should be added, root item if nullptr
+        *@param pItem - newly added item
+        */
+        void addItemToView(QObject* pParentItem, QObject* pItem);
+
+        /**
+        * Called when the name changed
+        *@param name - name
+        */
+        void nameChanged(const QString& name);
+
+    public:
         TreeItem();
 
         /**
@@ -53,24 +90,6 @@ class TreeItem : public QObject
         TreeItem(const std::wstring& name);
 
         virtual ~TreeItem();
-
-        /**
-        * Gets the item unique identifier
-        *@return the item unique identifier
-        */
-        virtual Q_INVOKABLE QString getId() const;
-
-        /**
-        * Gets the item name
-        *@return the item name
-        */
-        virtual Q_INVOKABLE QString getName() const;
-
-        /**
-        * Sets the item name
-        *@param name - the item name
-        */
-        virtual Q_INVOKABLE void setName(const QString& name);
 
         /**
         * Gets the item parent
@@ -100,12 +119,6 @@ class TreeItem : public QObject
         virtual bool Delete(TreeItem* pItem, bool recursive = true);
 
         /**
-        * Deletes a child item from this item at index
-        *@param index - child item index to delete
-        */
-        //REM virtual void DeleteAt(std::size_t index);
-
-        /**
         * Deletes all children
         */
         virtual void DeleteAll();
@@ -122,36 +135,10 @@ class TreeItem : public QObject
         */
         virtual std::size_t GetChildCount() const;
 
-        /**
-        * Gets if this item is a leaf
-        *@return true if this item is a leaf, otherwise false
-        */
-        virtual bool IsLeaf() const;
-
-        /**
-        * Gets the item level
-        *@return the item level
-        */
-        virtual std::size_t GetLevel() const;
-
-        /**
-        * Sets the item as collapsed
-        *@param value - if true, item is collapsed
-        */
-        virtual void SetCollapsed(bool value);
-
-        /**
-        * Checks if item is collapsed
-        *@return true if item is collapsed, otherwise false
-        */
-        virtual bool IsCollapsed() const;
-
     private:
         typedef std::vector<TreeItem*> IChildren;
 
         std::wstring m_Name;
-        TreeItem*    m_pParent   = nullptr;
+        TreeItem*    m_pParent = nullptr;
         IChildren    m_Children;
-        std::size_t  m_Index     = 0;
-        bool         m_Collapsed = false;
 };

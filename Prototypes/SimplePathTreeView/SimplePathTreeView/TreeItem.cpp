@@ -49,11 +49,6 @@ TreeItem::~TreeItem()
         delete pChild;
 }
 //---------------------------------------------------------------------------
-QString TreeItem::getId() const
-{
-    return QString::fromStdString(std::to_string(std::uintptr_t(this)));
-}
-//---------------------------------------------------------------------------
 QString TreeItem::getName() const
 {
     return QString::fromStdWString(m_Name);
@@ -62,6 +57,11 @@ QString TreeItem::getName() const
 void TreeItem::setName(const QString& name)
 {
     m_Name = name.toStdWString();
+}
+//---------------------------------------------------------------------------
+QString TreeItem::getUID() const
+{
+    return QString::fromStdString(std::to_string(std::uintptr_t(this)));
 }
 //---------------------------------------------------------------------------
 TreeItem* TreeItem::GetParent() const
@@ -108,17 +108,6 @@ bool TreeItem::Delete(TreeItem* pItem, bool recursive)
     return false;
 }
 //---------------------------------------------------------------------------
-/*REM
-void TreeItem::DeleteAt(std::size_t index)
-{
-    if (index >= m_Children.size())
-        return;
-
-    delete m_Children[index];
-    m_Children.erase(m_Children.begin() + index);
-}
-*/
-//---------------------------------------------------------------------------
 void TreeItem::DeleteAll()
 {
     for each (auto pChild in m_Children)
@@ -138,49 +127,5 @@ TreeItem* TreeItem::GetChildAt(std::size_t index) const
 std::size_t TreeItem::GetChildCount() const
 {
     return m_Children.size();
-}
-//---------------------------------------------------------------------------
-bool TreeItem::IsLeaf() const
-{
-    return !m_Children.size();
-}
-//---------------------------------------------------------------------------
-std::size_t TreeItem::GetLevel() const
-{
-    std::size_t level   = 0;
-    TreeItem*   pParent = m_pParent;
-
-    // count the parents until reaching the root
-    while (pParent)
-    {
-        ++level;
-        pParent = pParent->m_pParent;
-    }
-
-    return level;
-}
-//---------------------------------------------------------------------------
-void TreeItem::SetCollapsed(bool value)
-{
-    m_Collapsed = value;
-}
-//---------------------------------------------------------------------------
-bool TreeItem::IsCollapsed() const
-{
-    if (m_Collapsed)
-        return true;
-
-    TreeItem* pParent = m_pParent;
-
-    // check if a parent is collapsed
-    while (pParent)
-    {
-        if (pParent->m_Collapsed)
-            return true;
-
-        pParent = pParent->m_pParent;
-    }
-
-    return false;
 }
 //---------------------------------------------------------------------------

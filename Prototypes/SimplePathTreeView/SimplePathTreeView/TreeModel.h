@@ -55,6 +55,7 @@ class TreeModel : public QAbstractListModel
         /**
         * Data roles
         */
+        /*REM
         enum class IEDataRole
         {
             IE_DR_ItemName = 0,
@@ -62,6 +63,7 @@ class TreeModel : public QAbstractListModel
             IE_DR_ItemIsCollapsed,
             IE_DR_ItemIsLeaf
         };
+        */
 
         /**
         * Constructor
@@ -98,43 +100,6 @@ class TreeModel : public QAbstractListModel
         */
         virtual Q_INVOKABLE void clear();
 
-        virtual Q_INVOKABLE QString getText(const QString& id) const;
-
-        /**
-        * Adds an item
-        *@param parentIndex - item index which will own the new item
-        *@return true on success, otherwise false
-        */
-        //REM virtual Q_INVOKABLE bool addItem(int parentIndex);
-
-        /**
-        * Deletes an item
-        *@param index - item index to delete
-        *@return true on success, otherwise false
-        */
-        //REM virtual Q_INVOKABLE bool deleteItem(int index);
-
-        /**
-        * Checks if an item is a leaf
-        *@param index - item index
-        *@return true if the item is a leaf, otherwise false
-        */
-        virtual Q_INVOKABLE bool isLeaf(int index) const;
-
-        /**
-        * Sets the item as collapsed
-        *@param index - item index
-        *@param value - if true, item is collapsed
-        */
-        virtual Q_INVOKABLE void setCollapsed(int index, bool value);
-
-        /**
-        * Checks if item is collapsed
-        *@param index - item index
-        *@return true if item is collapsed, otherwise false
-        */
-        virtual Q_INVOKABLE bool isCollapsed(int index) const;
-
         /**
         * Gets row count
         *@param parent - the parent row index from which the count should be performed
@@ -160,104 +125,4 @@ class TreeModel : public QAbstractListModel
         typedef std::vector<TreeItem*> IItems;
 
         IItems m_Items;
-
-        /*REM
-        class ItemList
-        {
-            public:
-                ItemList();
-                ~ItemList();
-
-                void SetRootName(const std::wstring& name);
-
-                TreeItem* Add(int index);
-                TreeItem* Add(TreeItem* pItem);
-
-                void Delete(int index);
-                void Delete(TreeItem* pItem);
-
-                / **
-                * Deletes all items
-                * /
-                void DeleteAll();
-
-                TreeItem* GetItem(int index);
-
-                int GetIndex(TreeItem* pItem);
-
-                QVariant GetData(const QModelIndex& index, int role) const;
-
-                std::size_t GetRootCount() const;
-                std::size_t GetCount(int parentIndex) const;
-
-                / **
-                * Checks if an item is a leaf
-                *@param index - item index
-                *@return true if the item is a leaf, otherwise false
-                * /
-                bool IsLeaf(int index) const;
-
-                / **
-                * Sets the item as collapsed
-                *@param index - item index
-                *@param value - if true, item is collapsed
-                * /
-                void SetCollapsed(int index, bool value);
-
-                / **
-                * Checks if item is collapsed
-                *@param index - item index
-                *@return true if item is collapsed, otherwise false
-                * /
-                bool IsCollapsed(int index) const;
-
-                #ifdef _DEBUG
-                    void LogToOutput() const;
-                #endif
-
-            private:
-                TreeItem m_Root;
-
-                const TreeItem* GetItem(int index, const TreeItem* pCurrent, std::size_t& count) const;
-
-                int GetIndex(TreeItem* pItem, TreeItem* pCurrent, std::size_t& count) const;
-
-                void GetCount(const TreeItem* pCurrent, std::size_t& count) const;
-
-                #ifdef _DEBUG
-                    void LogToOutput(const TreeItem* pCurrent) const;
-                #endif
-        };
-        */
-
-        //REM TreeItem    m_Root;
-        //REM ItemList    m_ItemList;
-        //REM std::size_t m_ItemGenCount = 0;
-
-        //REM TreeItem* IndexToItem(int index, std::size_t& count, TreeItem* pItem = nullptr);
-
-        //REM int ItemToIndex(TreeItem* pItem, TreeItem* pCurrent, std::size_t& count);
-
-        /*REM
-        TreeItem* GetFirst();
-        TreeItem* GetLast();
-        TreeItem* GetPrev(TreeItem* pItem);
-        TreeItem* GetNext(TreeItem* pItem);
-        */
-        //REM TreeItem* GetAt(int index, std::size_t& count);
-
-        std::wstring GetText(const TreeItem* pItem, const std::string& id) const;
-
-        /**
-        * Gets the item count (including all children)
-        *@return the item count
-        */
-        std::size_t GetItemCount() const;
-
-        /**
-        * Gets the item children count
-        *@param pItem - item from which children should be counted
-        *@return the item children count
-        */
-        std::size_t GetChildrenCount(const TreeItem* pItem) const;
 };

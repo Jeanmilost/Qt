@@ -84,7 +84,7 @@ Column
         {
             return (clItem.children.length > 2 ?
                             clItem.children[1].visible ?
-                                    qsTr("- ") : qsTr("+ ") : qsTr("  ")) + model.treeItem.getName();
+                                    qsTr("- ") : qsTr("+ ") : qsTr("  ")) + model.treeItem.name;
         }
     }
 
