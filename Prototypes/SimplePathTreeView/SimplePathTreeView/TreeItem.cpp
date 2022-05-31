@@ -49,19 +49,19 @@ TreeItem::~TreeItem()
         delete pChild;
 }
 //---------------------------------------------------------------------------
-std::string TreeItem::GetID() const
+QString TreeItem::getId() const
 {
-    return std::to_string(std::uintptr_t(this));
+    return QString::fromStdString(std::to_string(std::uintptr_t(this)));
 }
 //---------------------------------------------------------------------------
-std::wstring TreeItem::GetName() const
+QString TreeItem::getName() const
 {
-    return m_Name;
+    return QString::fromStdWString(m_Name);
 }
 //---------------------------------------------------------------------------
-void TreeItem::SetName(const std::wstring& name)
+void TreeItem::setName(const QString& name)
 {
-    m_Name = name;
+    m_Name = name.toStdWString();
 }
 //---------------------------------------------------------------------------
 TreeItem* TreeItem::GetParent() const

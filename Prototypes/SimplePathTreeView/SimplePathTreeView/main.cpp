@@ -34,7 +34,6 @@ int main(int argc, char *argv[])
     TreeItem* pItemB   = pModel->AddItem(nullptr, L"Item B");
     TreeItem* pItemC   = pModel->AddItem(nullptr, L"Item C");
     TreeItem* pItemD   = pModel->AddItem(nullptr, L"Item D");
-    /*
     TreeItem* pItemA1  = pModel->AddItem(pItemA,  L"Item A - 1");
     TreeItem* pItemA2  = pModel->AddItem(pItemA,  L"Item A - 2");
     TreeItem* pItemA3  = pModel->AddItem(pItemA,  L"Item A - 3");
@@ -49,7 +48,6 @@ int main(int argc, char *argv[])
     TreeItem* pItemC11 = pModel->AddItem(pItemC1, L"Item C - 1 - 1");
     TreeItem* pItemC12 = pModel->AddItem(pItemC1, L"Item C - 1 - 2");
     TreeItem* pItemC13 = pModel->AddItem(pItemC1, L"Item C - 1 - 3");
-    */
 
     return app.exec();
 }

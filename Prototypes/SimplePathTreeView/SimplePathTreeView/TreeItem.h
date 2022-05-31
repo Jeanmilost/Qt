@@ -58,19 +58,19 @@ class TreeItem : public QObject
         * Gets the item unique identifier
         *@return the item unique identifier
         */
-        virtual std::string GetID() const;
+        virtual Q_INVOKABLE QString getId() const;
 
         /**
         * Gets the item name
         *@return the item name
         */
-        virtual std::wstring GetName() const;
+        virtual Q_INVOKABLE QString getName() const;
 
         /**
         * Sets the item name
         *@param name - the item name
         */
-        virtual void SetName(const std::wstring& name);
+        virtual Q_INVOKABLE void setName(const QString& name);
 
         /**
         * Gets the item parent

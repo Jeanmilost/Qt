@@ -1,122 +1,100 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Templates 2.15 as T
 
 /**
 * Generic tree item
 *@author Jean-Milost Reymond
 */
-Item
+Column
 {
     // declared properties
-    property var    m_Model:           undefined
-    property var    m_Item:            ldMain.item
-    property var    m_SourceComponent: undefined
-    property string m_ID
+    property var m_Component: null
 
     // common properties
-    id: itItem
+    id: clItem
+    objectName: "clItem"
+    clip: true
 
     /**
-    * Item component
+    * Item mouse area
     */
-    Component
+    MouseArea
     {
         // common properties
-        id: cpItem
+        id: maItem
+        objectName: "maItem"
+        width: rwItem.implicitWidth
+        height: rwItem.implicitHeight
+
+        /// Called when item is double clicked
+        onDoubleClicked:
+        {
+            // expand/collapse item children
+            for (let i = 1; i < parent.children.length - 1; ++i)
+                parent.children[i].visible = !parent.children[i].visible;
+
+            txItemLabel.m_Text = maItem.getNodeText();
+        }
 
         /**
-        * Item column layout
+        * Item background
         */
-        Column
+        Row
         {
-            // aliases
-            property alias children: rpChildren
-
-            // declared properties
-            property var m_Content:       ldItem.item
-            property int m_Level:         0
-            property int m_ChildrenCount: 0
-
             // common properties
-            id: clItem
+            id: rwItem
+            objectName: "rwItem"
 
             /**
-            * Item row layout
+            * Item indent
             */
-            Row
+            Item
             {
                 // common properties
-                id: rwItem
+                width: model.level * 20
+                height: 1
+            }
 
-                /**
-                * Item content loader
-                */
-                Loader
+            /**
+            * Item label
+            */
+            Text
+            {
+                // declared properties
+                property string m_Text: maItem.getNodeText()
+
+                // common properties
+                id: txItemLabel
+                objectName: "txItemLabel"
+                text: m_Text
+                color: clItem.children.length > 2 ? "#3186ea" : "#e9d675"
+                font
                 {
-                    // common properties
-                    id: ldItem
-                    objectName: "ldItem"
-                    sourceComponent: itItem.m_SourceComponent
-                    width: fcTreeView.width
-                    height: fcTreeView.m_ItemHeight
-
-                    /// Called when component is loaded
-                    Component.onCompleted:
-                    {
-                        if (m_Model)
-                        {
-                            ldItem.item.m_Text  = m_Model.getText(m_ID);
-                            ldItem.item.m_Level = m_Level;
-                        }
-                    }
+                    bold: true;
+                    pixelSize: 14
                 }
             }
+        }
 
-            onM_LevelChanged:
-            {
-                ldItem.item.m_Level = m_Level;
-            }
-
-            /**
-            * Item children repeater
-            */
-            Repeater
-            {
-                // common properties
-                id: rpChildren
-                model: m_ChildrenCount
-                delegate: cpItem
-            }
+        /**
+        * Gets the node text
+        *@return the node text
+        */
+        function getNodeText()
+        {
+            return (clItem.children.length > 2 ?
+                            clItem.children[1].visible ?
+                                    qsTr("- ") : qsTr("+ ") : qsTr("  ")) + model.treeItem.getName();
         }
     }
 
     /**
-    * Item main loader
+    * Children repeater
     */
-    Loader
+    Repeater
     {
         // common properties
-        id: ldMain
-        objectName: "ldMain"
-        sourceComponent: cpItem
-    }
-
-    function getNb2()
-    {
-        return m_Item.children.itemAt(1).m_Content;
-    }
-
-    function changeNb2(count)
-    {
-        return m_Item.children.itemAt(2).m_ChildrenCount = count;
-    }
-
-    function changeTo5()
-    {
-        m_Item.m_ChildrenCount = 5;
-
-        for (let i = 0; i < m_Item.children.count; ++i)
-            m_Item.children.itemAt(i).m_Level = m_Item.m_Level + 1;
+        model: childArray
+        delegate: m_Component
     }
 }

@@ -46,10 +46,10 @@ class TreeModel : public QAbstractListModel
     signals:
         /**
         * Called when an item should be added to the view
-        *@param parentId - parent item identifier in which item should be added
-        *@param id - newly added item identifier
+        *@param pParentItem - parent item in which item should be added, root item if nullptr
+        *@param pItem - newly added item
         */
-        void addItemToView(const QString& parentId, const QString& id);
+        void addItemToView(QObject* pParentItem, QObject* pItem);
 
     public:
         /**

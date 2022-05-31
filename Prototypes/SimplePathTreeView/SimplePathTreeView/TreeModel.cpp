@@ -349,14 +349,13 @@ TreeItem* TreeModel::AddItem(TreeItem* pParent, const std::wstring& name)
             m_Items.push_back(pItem.get());
             pNewItem = pItem.release();
 
-            emit addItemToView(QString(), QString::fromStdString(pNewItem->GetID()));
+            emit addItemToView(nullptr, pNewItem);
         }
         else
         {
             pNewItem = pParent->Add(name);
 
-            emit addItemToView(QString::fromStdString(pParent->GetID()),
-                               QString::fromStdString(pNewItem->GetID()));
+            emit addItemToView(pParent, pNewItem);
         }
     }
     catch (...)
@@ -558,8 +557,8 @@ std::wstring TreeModel::GetText(const TreeItem* pItem, const std::string& id) co
     if (!pItem)
         return L"";
 
-    if (id == pItem->GetID())
-        return pItem->GetName();
+    if (id == pItem->getId().toStdString())
+        return pItem->getName().toStdWString();
 
     const std::size_t childCount = pItem->GetChildCount();
 
