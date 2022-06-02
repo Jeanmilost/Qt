@@ -153,6 +153,14 @@ T.Frame
                 visible: true
                 minimumSize: 0.1
             }
+
+            /**
+            * Unselects all the tree nodes
+            */
+            function unselectAll()
+            {
+                changeNodeSelection(false);
+            }
         }
 
         /**
@@ -176,6 +184,7 @@ T.Frame
                     // add root node to tree
                     lmTreeContentModel.append({"treeItem":   item,
                                                "level":      0,
+                                               "selected":   false,
                                                "childArray": []});
 
                     return;
@@ -191,6 +200,7 @@ T.Frame
                 // add node to parent
                 parentNode.childArray.append({"treeItem":   item,
                                               "level":      parentLevel + 1,
+                                              "selected":   false,
                                               "childArray": []});
             }
         }
@@ -205,7 +215,7 @@ T.Frame
     {
         var deep = 0;
 
-        // iterate through root items
+        // iterate through root nodes
         for (var i = 0; i < lmTreeContentModel.count; ++i)
         {
             // get root node
@@ -214,7 +224,7 @@ T.Frame
             // must exist
             if (!node)
             {
-                console.error("Find item - FAILED - found invalid node - index - " + i + " - uid to find - " + uid);
+                console.error("Find node - FAILED - found invalid node - index - " + i + " - uid to find - " + uid);
                 continue;
             }
 
@@ -249,7 +259,7 @@ T.Frame
         if (node.treeItem.uid === uid)
             return [node, deep - 1];
 
-        // iterate through children items
+        // iterate through children nodes
         for (var i = 0; i < node.childArray.count; ++i)
         {
             // get child
@@ -273,5 +283,66 @@ T.Frame
         }
 
         return [null, -1];
+    }
+
+    /**
+    * Changes the selection state in all nodes
+    *@param selection - if true, all nodes will be selected, otherwise unselected
+    */
+    function changeNodeSelection(selection)
+    {
+        // iterate through root nodes
+        for (var i = 0; i < lmTreeContentModel.count; ++i)
+        {
+            // get root node
+            var node = lmTreeContentModel.get(i);
+
+            // must exist
+            if (!node)
+            {
+                console.error("Change node selection - FAILED - found invalid node - index - " + i + " - uid to find - " + uid);
+                continue;
+            }
+
+            // set the node selection state
+            node.selected = selection;
+
+            // change the selection in all children
+            changeChildSelection(node, selection);
+        }
+    }
+
+    /**
+    * Changes the selection state in all children nodes
+    *@param node - parent node from which the selection should be changed
+    *@param selection - if true, all nodes will be selected, otherwise unselected
+    */
+    function changeChildSelection(node, selection)
+    {
+        // no node?
+        if (!node)
+            return;
+
+        // iterate through children nodes
+        for (var i = 0; i < node.childArray.count; ++i)
+        {
+            // get child
+            var child = node.childArray.get(i);
+
+            // must exist
+            if (!child)
+            {
+                console.error("Change child selection - FAILED - found invalid child - index - " + i                 +
+                              " - parent - "                                                     + node.treeItem.uid +
+                              " - uid to find - "                                                + uid);
+                continue;
+            }
+
+            // set the node selection state
+            child.selected = selection;
+
+            // change the selection in all children
+            changeChildSelection(child, selection);
+        }
     }
 }
