@@ -31,11 +31,15 @@ Column
         /// Called when item is clicked
         onClicked:
         {
+            // reset currently selected item
+            lvTreeView.m_SelectedItem = null;
+
             // unselect all currently selected items
             lvTreeView.unselectAll();
 
             // select this item
-            model.selected = true;
+            model.selected            = true;
+            lvTreeView.m_SelectedItem = clItem;
         }
 
         /// Called when item is double clicked
@@ -122,11 +126,15 @@ Column
                             /// called when item is clicked
                             onClicked:
                             {
+                                // reset currently selected item
+                                lvTreeView.m_SelectedItem = null;
+
                                 // unselect all currently selected items
                                 lvTreeView.unselectAll();
 
                                 // select this item
-                                model.selected = true;
+                                model.selected            = true;
+                                lvTreeView.m_SelectedItem = clItem;
 
                                 // expand/collapse item children
                                 for (let i = 1; i < clItem.children.length - 1; ++i)
@@ -164,11 +172,15 @@ Column
                             /// called when item is clicked
                             onClicked:
                             {
+                                // reset currently selected item
+                                lvTreeView.m_SelectedItem = null;
+
                                 // unselect all currently selected items
                                 lvTreeView.unselectAll();
 
                                 // select this item
-                                model.selected = true;
+                                model.selected            = true;
+                                lvTreeView.m_SelectedItem = clItem;
 
                                 // expand/collapse item children
                                 for (let i = 1; i < clItem.children.length - 1; ++i)

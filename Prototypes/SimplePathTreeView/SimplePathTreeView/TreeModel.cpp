@@ -50,65 +50,29 @@ TreeModel::~TreeModel()
         delete pItem;
 }
 //---------------------------------------------------------------------------
-TreeItem* TreeModel::AddItem(TreeItem* pParent, const std::wstring& name)
+void TreeModel::onAddItemClicked(QObject* pSelectedItem, int level)
 {
-          TreeItem* pItem     = nullptr;
-    const int       itemCount = m_Items.size();
+    // get the parent to add to and add new item
+    TreeItem* pParent = static_cast<TreeItem*>(pSelectedItem);
+    TreeItem* pItem   = AddItem(pParent, L"Item XXX");
 
-    beginInsertRows(QModelIndex(), itemCount, itemCount);
-
-    try
+    if (!pItem)
     {
-        // is a root item?
-        if (!pParent)
-        {
-            // create a root item and add it to list
-            std::unique_ptr<TreeItem> pRoot = std::make_unique<TreeItem>(name);
-            m_Items.push_back(pRoot.get());
-            pItem = pRoot.release();
-        }
-        else
-            // create a child item
-            pItem = pParent->Add(name);
-
-        // notify view that a new item was added
-        emit addItemToView(pParent, pItem);
+        // todo -cFeature -oJean: log error
+        return;
     }
-    catch (...)
-    {}
 
-    endInsertRows();
-
-    return pItem;
+    const std::wstring name; // = OnGetItemName();
+    pItem->setName(QString::fromStdWString(name));
 }
 //---------------------------------------------------------------------------
-void TreeModel::DeleteItem(TreeItem* pItem)
+void TreeModel::onDeleteItemClicked(QObject* pSelectedItem, int level)
 {
-    //beginRemoveRows();
-    //endRemoveRows();
+    if (!pSelectedItem)
+        return;
 
-    for (std::size_t i = 0; i < m_Items.size(); ++i)
-    {
-        if (m_Items[i] == pItem)
-        {
-            delete m_Items[i];
-            m_Items.erase(m_Items.begin() + i);
-            return;
-        }
-
-        if (m_Items[i]->Delete(pItem))
-            return;
-    }
-}
-//---------------------------------------------------------------------------
-void TreeModel::onAddItemClicked(int parentIndex)
-{
-    //REM addItem(parentIndex);
-}
-//---------------------------------------------------------------------------
-void TreeModel::onDeleteItemClicked(int index)
-{
-    //REM deleteItem(index);
+    TreeItem* pItem = static_cast<TreeItem*>(pSelectedItem);
+    DeleteItem(pItem);
 }
 //---------------------------------------------------------------------------
 void TreeModel::onItemDblClicked(int index)
@@ -147,5 +111,68 @@ QHash<int, QByteArray> TreeModel::roleNames() const
     */
 
     return roles;
+}
+//---------------------------------------------------------------------------
+TreeItem* TreeModel::AddItem(TreeItem* pParent, const std::wstring& name)
+{
+    TreeItem* pItem     = nullptr;
+    const int itemCount = m_Items.size();
+
+    beginInsertRows(QModelIndex(), itemCount, itemCount);
+
+    try
+    {
+        // is a root item?
+        if (!pParent)
+        {
+            // create a root item and add it to list
+            std::unique_ptr<TreeItem> pRoot = std::make_unique<TreeItem>(name);
+            m_Items.push_back(pRoot.get());
+            pItem = pRoot.release();
+        }
+        else
+            // create a child item
+            pItem = pParent->Add(name);
+
+        // notify view that a new item was added
+        emit addItemToView(pParent, pItem);
+    }
+    catch (...)
+    {
+        // todo -cFeature -oJean: Log the error
+    }
+
+    endInsertRows();
+
+    return pItem;
+}
+//---------------------------------------------------------------------------
+void TreeModel::DeleteItem(TreeItem* pItem)
+{
+    if (!pItem)
+        return;
+
+    // notify view that an item is about to be removed
+    emit removeItemFromView(pItem->GetParent(), pItem);
+
+    for (std::size_t i = 0; i < m_Items.size(); ++i)
+    {
+        if (m_Items[i] == pItem)
+        {
+            const int itemCount = m_Items.size();
+
+            // notify interface only for root items, because only they have a corresponding
+            // item in the ListView
+            beginRemoveRows(QModelIndex(), itemCount - 1, itemCount - 1);
+            delete m_Items[i];
+            m_Items.erase(m_Items.begin() + i);
+            endRemoveRows();
+
+            return;
+        }
+
+        if (m_Items[i]->Delete(pItem))
+            return;
+    }
 }
 //---------------------------------------------------------------------------

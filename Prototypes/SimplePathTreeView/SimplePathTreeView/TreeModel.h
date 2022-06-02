@@ -51,6 +51,13 @@ class TreeModel : public QAbstractListModel
         */
         void addItemToView(QObject* pParentItem, QObject* pItem);
 
+        /**
+        * Called when an item was removed from the view
+        *@param pParentItem - parent item owning the item to remove, root item if nullptr
+        *@param pItem - removed item
+        */
+        void removeItemFromView(QObject* pParentItem, QObject* pItem);
+
     public:
         /**
         * Data roles
@@ -73,21 +80,19 @@ class TreeModel : public QAbstractListModel
 
         virtual ~TreeModel();
 
-        TreeItem* AddItem(TreeItem* pParent, const std::wstring& name);
-
-        void DeleteItem(TreeItem* pItem);
-
         /**
         * Called when the add item button was clicked on the tree view
-        *@param parentIndex - item index which will own the new item
+        *@param pSelectedItem - selected item, nullptr if no item selected
+        *@param level - selected item level, -1 if no item selected
         */
-        virtual Q_INVOKABLE void onAddItemClicked(int parentIndex);
+        virtual Q_INVOKABLE void onAddItemClicked(QObject* pSelectedItem, int level);
 
         /**
         * Called when the delete item button was clicked on the tree view
-        *@param index - item index to delete
+        *@param pSelectedItem - selected item, nullptr if no item selected
+        *@param level - selected item level, -1 if no item selected
         */
-        virtual Q_INVOKABLE void onDeleteItemClicked(int index);
+        virtual Q_INVOKABLE void onDeleteItemClicked(QObject* pSelectedItem, int level);
 
         /**
         * Called when a process is double-clicked
@@ -120,6 +125,10 @@ class TreeModel : public QAbstractListModel
         *@return the role names
         */
         virtual QHash<int, QByteArray> roleNames() const;
+
+        virtual TreeItem* AddItem(TreeItem* pParent, const std::wstring& name);
+
+        virtual void DeleteItem(TreeItem* pItem);
 
     private:
         typedef std::vector<TreeItem*> IItems;
