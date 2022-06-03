@@ -72,6 +72,8 @@ class TreeModel : public QAbstractListModel
         };
         */
 
+        typedef std::function<QString(TreeItem*)> ITfOnGetItemName;
+
         /**
         * Constructor
         *@param pParent - parent object owning this object
@@ -126,12 +128,29 @@ class TreeModel : public QAbstractListModel
         */
         virtual QHash<int, QByteArray> roleNames() const;
 
+        /**
+        * Adds an item to the tree
+        *@param pParent - parent item in which item should be added, root item if nullptr
+        *@param name - item name
+        *@return newly added item
+        */
         virtual TreeItem* AddItem(TreeItem* pParent, const std::wstring& name);
 
+        /**
+        * Deletes an item from the tree
+        *@param pItem - item to delete
+        */
         virtual void DeleteItem(TreeItem* pItem);
+
+        /**
+        * Sets the OnGetItemName callback
+        *@param callback - function callback
+        */
+        void Set_OnGetItemName(ITfOnGetItemName callback);
 
     private:
         typedef std::vector<TreeItem*> IItems;
 
-        IItems m_Items;
+        IItems           m_Items;
+        ITfOnGetItemName m_fOnGetItemName;
 };

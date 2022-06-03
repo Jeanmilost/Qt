@@ -54,7 +54,7 @@ void TreeModel::onAddItemClicked(QObject* pSelectedItem, int level)
 {
     // get the parent to add to and add new item
     TreeItem* pParent = static_cast<TreeItem*>(pSelectedItem);
-    TreeItem* pItem   = AddItem(pParent, L"Item XXX");
+    TreeItem* pItem   = AddItem(pParent, L"");
 
     if (!pItem)
     {
@@ -62,8 +62,13 @@ void TreeModel::onAddItemClicked(QObject* pSelectedItem, int level)
         return;
     }
 
-    const std::wstring name; // = OnGetItemName();
-    pItem->setName(QString::fromStdWString(name));
+    // on get name callback defined?
+    if (m_fOnGetItemName)
+    {
+        // call the callback and change the name
+        const QString name = m_fOnGetItemName(pItem);
+        pItem->setName(name);
+    }
 }
 //---------------------------------------------------------------------------
 void TreeModel::onDeleteItemClicked(QObject* pSelectedItem, int level)
@@ -174,5 +179,10 @@ void TreeModel::DeleteItem(TreeItem* pItem)
         if (m_Items[i]->Delete(pItem))
             return;
     }
+}
+//---------------------------------------------------------------------------
+void TreeModel::Set_OnGetItemName(ITfOnGetItemName callback)
+{
+    m_fOnGetItemName = callback;
 }
 //---------------------------------------------------------------------------

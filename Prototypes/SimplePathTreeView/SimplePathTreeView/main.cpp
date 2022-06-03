@@ -6,6 +6,25 @@
 #include "TreeModel.h"
 
 //---------------------------------------------------------------------------
+class TreeItemNameGen
+{
+    public:
+        TreeItemNameGen()
+        {}
+
+        virtual ~TreeItemNameGen()
+        {}
+
+        virtual QString GetNextName(TreeItem* pItem)
+        {
+            ++m_GenCount;
+            return QString::fromStdWString((L"Item " + std::to_wstring(m_GenCount)).c_str());
+        }
+
+    private:
+        std::size_t m_GenCount = 0;
+};
+//---------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -48,6 +67,14 @@ int main(int argc, char *argv[])
     TreeItem* pItemC11 = pModel->AddItem(pItemC1, L"Item C - 1 - 1");
     TreeItem* pItemC12 = pModel->AddItem(pItemC1, L"Item C - 1 - 2");
     TreeItem* pItemC13 = pModel->AddItem(pItemC1, L"Item C - 1 - 3");
+
+    TreeItemNameGen nameGen;
+
+    // register a lambda function to get the next available item name
+    pModel->Set_OnGetItemName([&nameGen](TreeItem* pItem) -> QString
+    {
+        return nameGen.GetNextName(pItem);
+    });
 
     return app.exec();
 }

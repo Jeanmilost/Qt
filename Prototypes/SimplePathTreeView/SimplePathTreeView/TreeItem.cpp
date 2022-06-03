@@ -57,6 +57,8 @@ QString TreeItem::getName() const
 void TreeItem::setName(const QString& name)
 {
     m_Name = name.toStdWString();
+
+    emit nameChanged(getName());
 }
 //---------------------------------------------------------------------------
 QString TreeItem::getUID() const
