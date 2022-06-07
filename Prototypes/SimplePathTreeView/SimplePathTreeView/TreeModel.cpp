@@ -108,13 +108,6 @@ QVariant TreeModel::data(const QModelIndex& index, int role) const
 QHash<int, QByteArray> TreeModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    /*REM
-    roles[(int)TreeModel::IEDataRole::IE_DR_ItemName]        = "itemName";
-    roles[(int)TreeModel::IEDataRole::IE_DR_ItemLevel]       = "itemLevel";
-    roles[(int)TreeModel::IEDataRole::IE_DR_ItemIsCollapsed] = "itemIsCollapsed";
-    roles[(int)TreeModel::IEDataRole::IE_DR_ItemIsLeaf]      = "itemIsLeaf";
-    */
-
     return roles;
 }
 //---------------------------------------------------------------------------

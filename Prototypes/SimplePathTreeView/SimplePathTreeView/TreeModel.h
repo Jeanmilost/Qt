@@ -59,19 +59,6 @@ class TreeModel : public QAbstractListModel
         void removeItemFromView(QObject* pParentItem, QObject* pItem);
 
     public:
-        /**
-        * Data roles
-        */
-        /*REM
-        enum class IEDataRole
-        {
-            IE_DR_ItemName = 0,
-            IE_DR_ItemLevel,
-            IE_DR_ItemIsCollapsed,
-            IE_DR_ItemIsLeaf
-        };
-        */
-
         typedef std::function<QString(TreeItem*)> ITfOnGetItemName;
 
         /**

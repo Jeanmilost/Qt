@@ -8,12 +8,6 @@ import QtQuick.Window 2.15
 */
 ApplicationWindow
 {
-    // FIXME
-    property string m_PlusItemGlyph:         "qrc:/Resources/Images/plus.svg"
-    property string m_MinusItemGlyph:        "qrc:/Resources/Images/minus.svg"
-    property int    m_DefTransitionDuration: 0
-    property int    m_TransitionDuration:    0
-
     // common properties
     id: awMain
     objectName: "awMain"
